@@ -4,15 +4,18 @@ package com.example.baseio.netty;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NettyServerInHandler extends ChannelInboundHandlerAdapter {
     private static Logger logger = LoggerFactory.getLogger(NettyServerInHandler.class);
 
+
+    //每当从客户端接收到新数据时，都会使用收到的消息调用此方法。
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg)
-            throws Exception {
+    // ChannelHandlerContext对象提供的各种操作，使您可以触发各种I / O的事件和操作。
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         logger.info("HelloServerInHandler.channelRead");
         ByteBuf result = (ByteBuf) msg;
         byte[] result1 = new byte[result.readableBytes()];
@@ -31,6 +34,9 @@ public class NettyServerInHandler extends ChannelInboundHandlerAdapter {
         encoded.writeBytes(response.getBytes());
         ctx.write(encoded);
         ctx.flush();
+        // ByteBuf是一个引用计数对象，必须通过该release()方法显式释放
+        ReferenceCountUtil.release(msg);
+
     }
 
     @Override

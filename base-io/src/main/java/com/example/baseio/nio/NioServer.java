@@ -78,7 +78,7 @@ public class NioServer {
             }
         }
     }
-    private  void doWrite(SocketChannel sc) throws IOException{
+    private void doWrite(SocketChannel sc) throws IOException{
         byte[] req ="服务器已接受".getBytes();
         ByteBuffer byteBuffer = ByteBuffer.allocate(req.length);
         byteBuffer.put(req);
